@@ -1,9 +1,9 @@
 spring:
   application:
-    name: cart-service   # or payment-ingestor, pick one depending on the service
+    name: payment-ingester   # or payment-ingestor, pick one depending on the service
 
   datasource:
-    url: jdbc:mysql://localhost:3306/cartdb
+    url: jdbc:mysql://localhost:3306/ingesterdb
     username: root
     password: root
 
@@ -16,6 +16,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: all
+      enable-idempotence: true
+
+app:
+  kafka:
+    submitted-topic: payments.submitted   # property for @Value("${app.kafka.submitted-topic}")
 
 server:
   port: 8080
